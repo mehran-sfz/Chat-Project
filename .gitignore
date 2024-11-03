@@ -1,0 +1,11 @@
+env/
+.idea
+media/
+
+**/__pycache__/
+**/*.pyc
+
+mysite/db.sqlite3
+db.sqlite3
+local_settings.py
+

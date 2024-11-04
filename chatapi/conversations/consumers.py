@@ -5,7 +5,6 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from .models import Chat, Message
 from django.contrib.auth import get_user_model
 from channels.db import database_sync_to_async
-from .serializers import MessageSerializer, UserSerializer
 
 User = get_user_model()
 

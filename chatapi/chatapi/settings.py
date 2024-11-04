@@ -77,7 +77,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'chatapi.wsgi.application'
+# WSGI_APPLICATION = 'chatapi.wsgi.application'
 
 
 # Database
@@ -161,7 +161,12 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [('127.0.0.1', 6379)],
+            "hosts": [(
+                'elbrus.liara.cloud	',  # Replace with your cloud Redis hostname or IP
+                34971  # Replace with your cloud Redis port if different
+            )],
+            "password": "wlo5l8uKgqlcqjIIuAETxzqd",  # Optional: add password if your Redis requires authentication
+            "ssl": True  # Optional: enable SSL if your Redis requires a secure connection
         },
     },
 }

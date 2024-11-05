@@ -22,17 +22,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-iyxbr%fs!)pk(mku9we5&%y9+wy&4ik(y^srr!q73vyhkg)7mm'
+SECRET_KEY = os.environ.get('SECRET_KEY', 'fallback-secret-key').strip()
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if os.environ.get('DEBUG', False) == 'True' else False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOSTS', '*').strip()]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,13 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'channels',
-
     'rest_framework',
     'rest_framework_simplejwt',
 
     'accounts',
-    'conversations',
+    'chat_channels',
+    'user_conversations',
 ]
 
 MIDDLEWARE = [
@@ -77,18 +77,33 @@ TEMPLATES = [
     },
 ]
 
-# WSGI_APPLICATION = 'chatapi.wsgi.application'
+WSGI_APPLICATION = 'chatapi.wsgi.application'
+ASGI_APPLICATION = 'chatapi.asgi.application'
 
+# custom user model
+AUTH_USER_MODEL = 'accounts.User'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME'  : os.environ.get('DATABASE_NAME', 'postgres'),
+        'USER'  : os.environ.get('DATABASE_USER', 'postgres'),
+        'PASSWORD'  : os.environ.get('DATABASE_PASSWORD', 'postgres'),
+        'HOST'  : os.environ.get('DATABASE_HOST', 'database'),
+        'PORT'  : os.environ.get('DATABASE_PORT', '5432'),
     }
 }
+
 
 
 # Password validation
@@ -136,10 +151,7 @@ MEDIA_URL = '/media/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
-
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-AUTH_USER_MODEL = 'accounts.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -152,21 +164,12 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
 }
 
-
-# using asgi for websockets
-ASGI_APPLICATION = 'chatapi.asgi.application'
-
 # redis settings for channels
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [(
-                'elbrus.liara.cloud	',  # Replace with your cloud Redis hostname or IP
-                34971  # Replace with your cloud Redis port if different
-            )],
-            "password": "wlo5l8uKgqlcqjIIuAETxzqd",  # Optional: add password if your Redis requires authentication
-            "ssl": True  # Optional: enable SSL if your Redis requires a secure connection
+            "hosts": [("127.0.0.1", 6379)],
         },
     },
 }

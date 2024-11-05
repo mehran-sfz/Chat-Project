@@ -9,19 +9,30 @@ User = get_user_model()
 class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ['id', 'first_name', 'last_name', 'avatar']
+        fields = ['id', 'first_name', 'last_name', 'avatar', 'username']
 
 class UserSerializer(serializers.ModelSerializer):
-    profile = ProfileSerializer(source='profile', read_only=True) 
+    profile = ProfileSerializer(read_only=True) 
 
     class Meta:
         model = User
         fields = ['id', 'phone_number', 'is_active', 'profile']
       
+      
+class ShortMessageSerializer(serializers.ModelSerializer):
+    short_content = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Message
+        fields = ['id', 'sender', 'short_content']
+        
+    def get_short_content(self, obj):
+        if obj.content:
+            return obj.content[:10] + '...'
+        return None
         
 class MessageSerializer(serializers.ModelSerializer):
-    sender = UserSerializer(read_only=True)
-    reply_to = serializers.PrimaryKeyRelatedField(queryset=Message.objects.all(), allow_null=True)
+    reply_to = ShortMessageSerializer(read_only=True)
     
     class Meta:
         model = Message
@@ -51,7 +62,7 @@ class ChatSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Chat
-        fields = ['id', 'participants', 'status', 'created_at', 'last_message']
+        fields = ['id', 'uuid', 'participants', 'status', 'created_at', 'last_message']
         read_only_fields = ['created_at']
         
     def get_last_message(self, obj):
@@ -59,5 +70,5 @@ class ChatSerializer(serializers.ModelSerializer):
         
         last_message = obj.messages.order_by('-sended_at').first()
         if last_message:
-            return MessageSerializer(last_message).data
+            return ShortMessageSerializer(last_message).data
         return None

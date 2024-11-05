@@ -1,19 +1,21 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
-
+import uuid
 
 User = get_user_model()
 
 # Chat model
 class Chat(models.Model):
     
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     participants = models.ManyToManyField(User, related_name='chats')
     status = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
-        participants = ', '.join([user.username for user in self.participants.all()])
+        
+        participants = ', '.join([user.phone_number for user in self.participants.all()])
         return f"Chat between {participants}"
 
 class Message(models.Model):
@@ -23,7 +25,7 @@ class Message(models.Model):
     reply_to = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True)
     content = models.TextField(blank=True, null=True)
     file = models.FileField(upload_to='chat_files/', blank=True, null=True)
-    status = models.BooleanField(default=True)
+    status = models.BooleanField(default=False)
     sended_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
     
@@ -40,4 +42,4 @@ class Message(models.Model):
     def save(self, *args, **kwargs):
         if not self.content and not self.file:
             raise ValueError("Message need to have one of the content or file fields")
-        
+        super().save(*args, **kwargs)

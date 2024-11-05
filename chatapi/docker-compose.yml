@@ -1,0 +1,55 @@
+version: '3.8'
+
+services:
+  database:
+    container_name: postgres
+    image: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    restart: always
+
+  app:
+    build:
+      context: .  # Make sure your Dockerfile is here
+    image: chatapi
+    container_name: chatapi-app
+    entrypoint: ["/usr/src/app/entrypoint.sh"]
+    volumes:
+      - static:/usr/src/app/static
+      - media:/usr/src/app/media
+      - ./entrypoint.sh:/usr/src/app/entrypoint.sh
+    depends_on:
+      - database
+      - redis
+
+    env_file:
+      - .env
+
+  nginx:
+    container_name: nginx
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - static:/var/www/static
+      - media:/var/www/media
+    depends_on:
+      - app
+
+  redis:
+    container_name: redis
+    image: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis:/data
+
+volumes:
+  static:
+  media:
+  redis:

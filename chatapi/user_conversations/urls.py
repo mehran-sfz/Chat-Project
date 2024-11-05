@@ -1,5 +1,5 @@
 from django.urls import path
-import conversations.views as views
+import user_conversations.views as views
 
 
 urlpatterns = [

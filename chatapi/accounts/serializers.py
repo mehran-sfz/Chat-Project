@@ -10,13 +10,13 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['phone_number', 'is_active']
 
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = [
-            'email', 'first_name', 'last_name', 
-            'nationality_number', 'avatar', 'birth_date'
-        ]
+# class ProfileSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Profile
+#         fields = [
+#             'email', 'first_name', 'last_name', 'username',
+#             'nationality_number', 'avatar', 'birth_date',
+#         ]
 
 class OTPSerializer(serializers.Serializer):
     phone_number = serializers.CharField(max_length=15)
@@ -36,7 +36,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = [
-            'id', 'user', 'email', 'first_name', 'last_name',
+            'id', 'user', 'email', 'first_name', 'last_name', 'username',
             'nationality_number', 'avatar', 'birth_date',
             'created_at', 'updated_at'
         ]

@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "333d0ef6-eece-4197-b726-0ae290d95a93",
+		"_postman_id": "ee2b741c-c839-4caa-bf9e-5a274be89e91",
 		"name": "Chat",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "14406737"
@@ -385,7 +385,7 @@
 				"bearer": [
 					{
 						"key": "token",
-						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzMxNTkwNDI4LCJpYXQiOjE3MzA3MjY0MjgsImp0aSI6IjkyMTQyMjJkOTYyNDRjODJhOGY3MTlhMjU1NzUxY2E3IiwidXNlcl9pZCI6MX0.11pKI872W1wQRJqmTwIrdIIu-INUo3wTKjH5NTvuAzA",
+						"value": "",
 						"type": "string"
 					}
 				]

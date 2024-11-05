@@ -28,6 +28,8 @@ services:
 
     env_file:
       - .env
+    environment:
+      - DJANGO_SETTINGS_MODULE=chatapi.settings
 
   nginx:
     container_name: nginx

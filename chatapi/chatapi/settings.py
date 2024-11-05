@@ -77,7 +77,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'chatapi.wsgi.application'
+# WSGI_APPLICATION = 'chatapi.wsgi.application'
 ASGI_APPLICATION = 'chatapi.asgi.application'
 
 # custom user model
@@ -164,12 +164,12 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
 }
 
-# redis settings for channels
+# Redis settings for Channels
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [(os.getenv("REDIS_HOST", "redis"), int(os.getenv("REDIS_PORT", 6379)))],
         },
     },
 }

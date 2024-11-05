@@ -10,4 +10,5 @@ python manage.py migrate
 python manage.py collectstatic --no-input --clear
 
 # Start Gunicorn server
-gunicorn chatapi.asgi:application --bind 0.0.0.0:8000
+echo "Starting Uvicorn server..."
+daphne -u /tmp/daphne.sock -b 0.0.0.0 -p 8000 chatapi.asgi:application

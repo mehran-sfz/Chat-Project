@@ -21,7 +21,7 @@ To set up and run the project locally, follow these steps:
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/mehran-sfz/chat_project.git
+   git clone https://github.com/mehran-sfz/Chat-Project.git
 2. **Navigate to Project Directory:**
    ```bash
    cd chat_project/chatapi/
